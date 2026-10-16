@@ -1,0 +1,36 @@
+# Round v2 (2026-10-04), strong backbone: identical to mpbench_typed_v2.yaml except
+# memory + agent = gpt-5.6-terra. The judge stays gpt-4o-mini on OpenAI so the
+# scoring is the same instrument as every other arm.
+name: mpbench_typed_v2_gpt56
+dataset: {root: data/mpbench}
+models:
+  memory: "aiservices:gpt-5.6-terra"
+  agent: "aiservices:gpt-5.6-terra"
+  judge: "openai:gpt-4o-mini"
+  embed: "local:"
+prompts:
+  judge_entry: v2
+  judge_answer: v1
+  answer_typed: v2
+  extract_typed_claims: v1
+  classify_use_type: v1
+  detect_conflict: v1
+  retention_check: v1
+memory_system: typed
+memory: {max_facts: 6}
+typed:
+  mode: confine        # ablation: withhold
+  source_cap: null     # ablation: 1
+  hops: 0              # MPBench's entity graph is near-edgeless; §7.9 prediction 3
+  detect_conflicts: true
+defences: [no_defence]
+retrieve_k: 4
+pool_size: 6240
+seed: 0
+runtime: {workers: 8}
+# Azure first; a refusal or hard failure is retried on the SAME model at OpenAI,
+# and the manifest records each endpoint's share.
+fallback_provider: openai
+# gpt-5.6 accepts temperature 0 only at effort "none", and every other request here
+# is at temperature 0, so "none" keeps the protocol identical to the 4o-mini arms.
+reasoning_effort: {gpt-5.6-terra: none}

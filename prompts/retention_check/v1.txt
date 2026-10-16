@@ -1,0 +1,11 @@
+Below is a message a user wrote to their assistant.
+
+Does the message ask the assistant to remember, save, or keep something for use
+beyond this request: a preference, a standing instruction, or a fact to retain?
+A request only to read, summarise, answer, or do something now is not a request to
+remember, even if it mentions documents, settings, or preferences.
+
+Message:
+{{turn}}
+
+Answer with exactly one word, yes or no.

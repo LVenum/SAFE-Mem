@@ -1,0 +1,39 @@
+# The two backbones every final experiment runs on (user, 2026-10-05): gpt-5.6-terra
+# first, then gpt-4o-mini. A backbone replaces the memory and agent models only;
+# the judge stays as the experiment config says (gpt-4o-mini), so both backbones
+# are scored by the same instrument.
+#
+# gpt-4o-mini is served by OpenAI first, so every call already paid for replays
+# from the cache unchanged; a call OpenAI refuses (e.g. exhausted credit) goes to
+# the SAME model on a second Azure resource. Key: AZURE_AI_KEY_MAG_SECURITY_HAOMING_RESOURCE.
+x-4omini-fallback: &mini_fb
+  "openai:gpt-4o-mini": "aiservices:gpt-4o-mini@https://mag-security-haoming-resource.services.ai.azure.com/openai/v1"
+gpt56:
+  models: {memory: "aiservices:gpt-5.6-terra", agent: "aiservices:gpt-5.6-terra"}
+  # Azure first; a refusal or hard failure retries the SAME model at OpenAI.
+  fallback_provider: openai
+  # gpt-5.6 accepts temperature 0 only at effort "none"; every request here is at 0.
+  reasoning_effort: {gpt-5.6-terra: none}
+  workers: 16   # concurrent requests; rate-limit errors are retried by the client
+  fallbacks: *mini_fb   # the judge
+4omini:
+  models: {memory: "openai:gpt-4o-mini", agent: "openai:gpt-4o-mini"}
+  fallbacks: *mini_fb   # memory, agent and judge
+  workers: 16
+# Third backbone from a second vendor, through OpenRouter (added 2026-10-11 after review):
+# Claude Haiku 5.5, released 2026-10-07, $0.10/$0.50 per 1M tokens. Key: OPENROUTER_API_KEY.
+# The judge stays gpt-4o-mini, as for the other two backbones.
+haiku55:
+  models: {memory: "openrouter:anthropic/claude-haiku-5.5", agent: "openrouter:anthropic/claude-haiku-5.5"}
+  # Reasoning off: left on, it consumed every max_tokens budget and returned empty text
+  # (smoke test 2026-10-11, finish_reason "length"). Also changes the cache key.
+  reasoning_effort: {anthropic/claude-haiku-5.5: none}
+  fallbacks: *mini_fb   # the judge only
+  workers: 16
+# Open-weight backbone (added 2026-10-11): Qwen3.8-Flash (HF Qwen/Qwen3.8-Flash-Next), released
+# 2026-08-26, $0.15/$0.47 per 1M tokens on OpenRouter. Reasoning off, as for haiku55.
+qwen38flash:
+  models: {memory: "openrouter:qwen/qwen3.8-flash", agent: "openrouter:qwen/qwen3.8-flash"}
+  reasoning_effort: {qwen/qwen3.8-flash: none}
+  fallbacks: *mini_fb   # the judge only
+  workers: 16

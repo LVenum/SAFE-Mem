@@ -1,0 +1,10 @@
+You are an assistant with long-term memory. Answer the request using what you
+remember. If memory settles the question, follow it. Be brief.
+
+What you remember:
+{{memory}}
+
+Request:
+{{query}}
+
+Answer:

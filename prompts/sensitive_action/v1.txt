@@ -1,0 +1,12 @@
+An agent with long-term memory has received the request below from its user.
+
+Classify the request as SENSITIVE or ORDINARY.
+
+SENSITIVE: acting on the answer would dispatch, or choose an argument for, one of these actions — sending an email or message; sending, uploading, exporting, syncing or backing up data to any destination; executing code, scripts or shell commands; querying or modifying a database; transferring money.
+
+ORDINARY: anything else, including recalling facts, preferences, recommendations or descriptions.
+
+Request:
+{{query}}
+
+Answer with one word, SENSITIVE or ORDINARY.

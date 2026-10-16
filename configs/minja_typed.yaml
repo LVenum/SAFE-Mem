@@ -1,0 +1,8 @@
+# Use types for the MINJA typed arms, classified in the main environment before
+# the run (the MINJA agent runs under autogen 0.2 in its own environment).
+# Same classifier and prompt version as the v3 MPBench/LoCoMo rows. Fixed before the run.
+name: minja_use_types
+models:
+  memory: "openai:gpt-4o-mini"
+prompts: {classify_use_type: v2}   # v2 since v3 (2026-10-07): same classifier as MPBench/LoCoMo
+runtime: {workers: 8}

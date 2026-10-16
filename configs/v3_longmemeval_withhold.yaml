@@ -1,0 +1,34 @@
+# LongMemEval_S, HELD OUT (spec §10.4): interface ready, NOT RUN until v3 is frozen.
+# speaker_a = 'user' is the principal; the assistant is the counterpart.
+dataset:
+  kind: longmemeval
+  path: data/longmemeval/longmemeval_s.json
+models:
+  memory: openai:gpt-4o-mini
+  agent: openai:gpt-4o-mini
+  judge: openai:gpt-4o-mini
+  embed: 'local:'
+prompts:
+  extract_typed_claims: v1
+  extract_dialogue_claims: v1
+  classify_use_type: v2
+  detect_conflict: v1
+  retention_sentence: v1
+memory_system: typed
+memory:
+  max_facts: 20
+typed:
+  mode: withhold
+  hops: 0
+  detect_conflicts: true
+  endorsement: sentence
+  evidence_slots: 4
+locomo:
+  principal: speaker_a
+systems:
+- memory
+retrieve_k: 4
+seed: 0
+runtime:
+  workers: 8
+name: v3_longmemeval_withhold

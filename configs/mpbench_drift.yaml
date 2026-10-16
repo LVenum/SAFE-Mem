@@ -1,0 +1,19 @@
+# DRIFT, Injection Isolator only (Secure Planner and Dynamic Validator ablated).
+# A write-time defence: it masks the tool result before extraction, so it needs
+# its own memory and its own run. Its false-mask rate on benign cases is
+# `refuse_rate_benign` in the summary.
+name: mpbench_drift
+dataset: {root: data/mpbench}
+models:
+  memory: "openai:gpt-4o-mini"
+  agent: "openai:gpt-4o-mini"
+  judge: "openai:gpt-4o-mini"
+  embed: "local:"
+prompts: {judge_entry: v2, judge_answer: v1, answer: v1, memory_extract: v1}
+memory: {max_facts: 6}
+write_isolation: drift
+defences: [no_defence]
+retrieve_k: 4
+pool_size: 6240
+seed: 0
+runtime: {workers: 8}

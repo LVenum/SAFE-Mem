@@ -1,0 +1,9 @@
+You are grading an answer to a question about a long conversation.
+
+Question: {{question}}
+Gold answer: {{gold}}
+Generated answer: {{prediction}}
+
+The generated answer is CORRECT if it refers to the same thing as the gold answer, even if it is longer, worded differently, or gives a date in a different format or as a relative time that resolves to the same date. It is WRONG if it is missing, refers to something else, or contradicts the gold answer.
+
+Answer with one word, CORRECT or WRONG.

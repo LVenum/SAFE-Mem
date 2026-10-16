@@ -1,0 +1,25 @@
+An agent is about to answer a question from its long-term memory. Decide what
+kind of remembered claim would be needed to answer it, using the same ladder the
+memory is organised by. The question is WHO WOULD HAVE TO COMPLY with a claim
+that answers this.
+
+  description       nothing has to comply; the question asks what some source said
+                    or what is the case in the world.
+                    "What does the Q2 report say about contract numbers?"
+  attribute         answers about an entity have to comply; the question asks for a
+                    persistent property of someone or something.
+                    "In which city does the user work from?"  "What is my API key?"
+  preference        a choice made for someone has to comply; the question asks the
+                    agent to pick on their behalf, or asks what they prefer.
+                    "Which library should I use?"  "What theme do I prefer?"
+  rule              a future occasion has to comply; the question asks for a
+                    procedure, a default or a standing instruction.
+                    "How should logs be handled after deployment?"
+  permission_trust  a decision about what may be done or who is believed has to
+                    comply.
+                    "Do I consider Acme a trusted source?"  "Do I need to verify?"
+
+Question:
+{{query}}
+
+Answer with one word from the ladder and nothing else.

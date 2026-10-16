@@ -1,0 +1,19 @@
+# ConsistencyGate (arXiv 2607.22962) as write-time admission control, on the
+# pooled store. Same extraction, prompts and judge as configs/mpbench_tma.yaml,
+# so the no_defence row is served from cache. Their stated defaults: K=5,
+# tau=0.7. Fixed before the run; not tuned after.
+name: mpbench_writegate
+dataset: {root: data/mpbench}
+models:
+  memory: "openai:gpt-4o-mini"
+  agent: "openai:gpt-4o-mini"
+  judge: "openai:gpt-4o-mini"
+  embed: "local:"
+prompts: {judge_entry: v2, judge_answer: v1, answer: v1, memory_extract: v3}
+memory: {max_facts: 12}
+write_gate: consistency
+write_gate_k: 5
+write_gate_tau: 0.7
+defences: [no_defence]
+retrieve_k: 4
+runtime: {workers: 8}

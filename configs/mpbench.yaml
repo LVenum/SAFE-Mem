@@ -1,0 +1,13 @@
+# First defence baselines on MPBench. Fixed before the run; not tuned after.
+name: mpbench
+dataset: {root: data/mpbench}
+models:
+  memory: "openai:gpt-4o-mini"
+  agent: "openai:gpt-4o-mini"
+  judge: "openai:gpt-4o-mini"
+  embed: "local:"
+prompts: {judge_entry: v2, judge_answer: v1, answer: v1, memory_extract: v1}
+memory: {max_facts: 6}
+defences: [no_defence, a_memguard]
+retrieve_k: 4
+runtime: {workers: 8}

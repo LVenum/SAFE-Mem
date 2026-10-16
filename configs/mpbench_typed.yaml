@@ -1,0 +1,29 @@
+# Typed-standing memory on MPBench, pooled, one principal (spec §7.1).
+# Fixed before the run. Nothing here is tuned afterwards; the two switches that
+# vary are swept as named ablations with their own config files.
+name: mpbench_typed
+dataset: {root: data/mpbench}
+models:
+  memory: "openai:gpt-4o-mini"
+  agent: "openai:gpt-4o-mini"
+  judge: "openai:gpt-4o-mini"
+  embed: "local:"
+prompts:
+  judge_entry: v2
+  judge_answer: v1
+  answer_typed: v1
+  extract_typed_claims: v1
+  classify_use_type: v1
+  detect_conflict: v1
+memory_system: typed
+memory: {max_facts: 6}
+typed:
+  mode: confine        # ablation: withhold
+  source_cap: null     # ablation: 1
+  hops: 0              # MPBench's entity graph is near-edgeless; §7.9 prediction 3
+  detect_conflicts: true
+defences: [no_defence]
+retrieve_k: 4
+pool_size: 6240
+seed: 0
+runtime: {workers: 8}

@@ -1,0 +1,25 @@
+# LongMemEval_S (cleaned release), no attack: the undefended memory of Table 1 on personal-assistant
+# chat histories. Identical to locomo_baselines except the dataset, defences [no_defence] and
+# systems [memory]. GPT-4o-mini only. Fixed before the run (2026-10-09).
+name: longmemeval_nodef
+dataset:
+  kind: longmemeval
+  path: data/longmemeval/longmemeval_s_cleaned.json
+models:
+  memory: openai:gpt-4o-mini
+  agent: openai:gpt-4o-mini
+  judge: openai:gpt-4o-mini
+  embed: 'local:'
+prompts:
+  memory_extract: v1
+memory_system: simple
+memory:
+  max_facts: 20
+defences:
+- no_defence
+systems:
+- memory
+retrieve_k: 4
+seed: 0
+runtime:
+  workers: 8

@@ -1,0 +1,21 @@
+# LoCoMo ablation (spec §7.7): withhold instead of confine.
+# Fixed before the run. k matches MPBench (spec §8). One write per session.
+name: locomo_typed_withhold
+dataset: {path: data/locomo/locomo10.json}
+models:
+  memory: "openai:gpt-4o-mini"
+  agent: "openai:gpt-4o-mini"
+  judge: "openai:gpt-4o-mini"
+  embed: "local:"
+prompts:
+  memory_extract: v1
+  extract_typed_claims: v1
+  classify_use_type: v1
+  detect_conflict: v1
+memory_system: typed
+memory: {max_facts: 20}   # per session (~20 turns), not per MPBench interaction
+typed: {mode: withhold, hops: 0, detect_conflicts: true}
+systems: [memory]   # the full-context column is in locomo_typed
+retrieve_k: 4
+seed: 0
+runtime: {workers: 8}

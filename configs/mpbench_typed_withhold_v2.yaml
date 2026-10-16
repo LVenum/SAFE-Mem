@@ -1,0 +1,33 @@
+# Round v2 (2026-10-04), gpt-4o-mini. Changes from v1, all fixed before this run:
+#   A  answer_typed v1 -> v2: kinds are ordered; no hedging when an item settles it.
+#   E  prompts.retention_check v1: an elevation also needs the principal's own turn
+#      to ask for something to be kept (v1 accepted any 8+ char substring of it).
+# gpt-4o-mini has no Azure deployment on our resource, so this arm runs on OpenAI.
+# Runs 20261004T042650Z / T051555Z are A only (no retention_check in their manifest).
+name: mpbench_typed_withhold_v2
+dataset: {root: data/mpbench}
+models:
+  memory: "openai:gpt-4o-mini"
+  agent: "openai:gpt-4o-mini"
+  judge: "openai:gpt-4o-mini"
+  embed: "local:"
+prompts:
+  judge_entry: v2
+  judge_answer: v1
+  answer_typed: v2
+  extract_typed_claims: v1
+  classify_use_type: v1
+  detect_conflict: v1
+  retention_check: v1
+memory_system: typed
+memory: {max_facts: 6}
+typed:
+  mode: withhold
+  source_cap: null     # ablation: 1
+  hops: 0              # MPBench's entity graph is near-edgeless; §7.9 prediction 3
+  detect_conflicts: true
+defences: [no_defence]
+retrieve_k: 4
+pool_size: 6240
+seed: 0
+runtime: {workers: 8}

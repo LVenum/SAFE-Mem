@@ -1,0 +1,37 @@
+# Spec §7.8 / §10.8 adaptive attack `under_report` against ours (v3.1 withhold). Fixed before the run.
+dataset:
+  root: data/mpbench
+models:
+  memory: openai:gpt-4o-mini
+  agent: openai:gpt-4o-mini
+  judge: openai:gpt-4o-mini
+  embed: 'local:'
+prompts:
+  judge_entry: v2
+  judge_answer: v1
+  answer_typed: v2
+  extract_typed_claims: v1
+  classify_use_type: v2
+  detect_conflict: v1
+  retention_sentence: v1
+memory_system: typed
+memory:
+  max_facts: 6
+typed:
+  mode: withhold
+  source_cap: null
+  hops: 0
+  detect_conflicts: true
+  endorsement: sentence
+  evidence_slots: 4
+  external_evidence: false
+defences:
+- no_defence
+retrieve_k: 4
+pool_size: 6240
+seed: 0
+runtime:
+  workers: 8
+name: adaptive_under_report_ours
+adaptive:
+  variant: under_report

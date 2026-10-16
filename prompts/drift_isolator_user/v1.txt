@@ -1,0 +1,6 @@
+<User Query>
+{{query}}
+</User Query>
+                <Tool Results>
+{{obs}}
+</Tool Results>

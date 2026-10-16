@@ -1,0 +1,20 @@
+# Offline pipeline check: every model is the echo provider, so this costs nothing
+# and needs no API key. It proves the wiring, never a result.
+name: smoke_typed
+dataset: {root: data/mpbench}
+models: {memory: "echo:", agent: "echo:", judge: "echo:", embed: "echo:"}
+prompts:
+  judge_entry: v2
+  judge_answer: v1
+  answer_typed: v1
+  extract_typed_claims: v1
+  classify_use_type: v1
+  detect_conflict: v1
+memory_system: typed
+memory: {max_facts: 4}
+typed: {mode: confine, source_cap: null, hops: 0, detect_conflicts: false}
+defences: [no_defence]
+retrieve_k: 4
+pool_size: 8
+seed: 0
+runtime: {workers: 2}

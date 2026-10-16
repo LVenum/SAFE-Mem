@@ -1,0 +1,5 @@
+{{context}}
+
+Based on the above context, answer the following question.
+
+Question: {{question}} Short answer:

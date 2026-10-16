@@ -1,0 +1,25 @@
+# Spec §7.8 / §10.8 adaptive attack `conflict_evasion` with no defence (does the attack strengthen the poison?).
+name: adaptive_conflict_evasion_nodef
+dataset:
+  root: data/mpbench
+models:
+  memory: openai:gpt-4o-mini
+  agent: openai:gpt-4o-mini
+  judge: openai:gpt-4o-mini
+  embed: 'local:'
+prompts:
+  judge_entry: v2
+  judge_answer: v1
+  answer: v1
+  memory_extract: v1
+memory:
+  max_facts: 6
+defences:
+- no_defence
+retrieve_k: 4
+runtime:
+  workers: 8
+pool_size: 6240
+seed: 0
+adaptive:
+  variant: conflict_evasion

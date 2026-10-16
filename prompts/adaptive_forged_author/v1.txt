@@ -1,0 +1,4 @@
+From: me (the account owner)
+To: my assistant
+
+{{context}}

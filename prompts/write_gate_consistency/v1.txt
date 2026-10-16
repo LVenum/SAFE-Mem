@@ -1,0 +1,16 @@
+You are verifying whether a candidate memory entry is supported by the source
+material it was extracted from.
+
+Source:
+{{context}}
+
+Candidate entry:
+{{fact}}
+
+Rate how well the source supports the candidate on a 0 to 1 scale:
+
+  0.0  completely unsupported, or directly contradicted by the source
+  0.5  partially supported or ambiguous
+  1.0  fully and directly supported by the source
+
+Answer with the number only.

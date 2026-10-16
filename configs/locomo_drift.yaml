@@ -1,0 +1,25 @@
+# LoCoMo, DRIFT injection isolator at write time (no attack: its false-mask cost).
+name: locomo_drift
+dataset:
+  path: data/locomo/locomo10.json
+models:
+  memory: openai:gpt-4o-mini
+  agent: openai:gpt-4o-mini
+  judge: openai:gpt-4o-mini
+  embed: 'local:'
+prompts:
+  memory_extract: v1
+memory_system: simple
+memory:
+  max_facts: 20
+defences:
+- no_defence
+randec:
+  weights: third_party/AMemGuard/certified-llm-safety/models/distilbert_suffix.pt
+systems:
+- memory
+retrieve_k: 4
+seed: 0
+runtime:
+  workers: 8
+write_isolation: drift

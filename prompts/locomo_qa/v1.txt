@@ -1,0 +1,5 @@
+{{context}}
+
+Based on the above context, write an answer in the form of a short phrase for the following question. Answer with exact words from the context whenever possible.
+
+Question: {{question}} Short answer:

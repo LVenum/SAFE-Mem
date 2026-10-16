@@ -1,0 +1,24 @@
+# The §7.6 baselines that act on retrieved memory, on the plain extract-and-store
+# substrate, pooled, one principal. Fixed before the run; not tuned after.
+# randec_distil loads a small local DistilBERT classifier; it runs on CPU.
+name: mpbench_baselines
+dataset: {root: data/mpbench}
+models:
+  memory: "openai:gpt-4o-mini"
+  agent: "openai:gpt-4o-mini"
+  judge: "openai:gpt-4o-mini"
+  embed: "local:"
+prompts: {judge_entry: v2, judge_answer: v1, answer: v1, memory_extract: v1}
+memory: {max_facts: 6}
+defences:
+  - llm_sanitiser
+  - memlineage_coarse
+  - memlineage_lm
+  - integrity_gate
+  - integrity_gate_all
+  - randec_distil
+randec: {weights: third_party/AMemGuard/certified-llm-safety/models/distilbert_suffix.pt}
+retrieve_k: 4
+pool_size: 6240
+seed: 0
+runtime: {workers: 8}

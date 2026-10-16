@@ -1,0 +1,38 @@
+# LongMemEval_S (cleaned release), no attack: StandGuard (v3.1 withhold) on personal-assistant chat
+#   histories. Identical to v31_locomo_withhold_a except the dataset; the user is the principal
+#   (speaker_a), the assistant the counterpart. GPT-4o-mini only. Fixed before the run (2026-10-09).
+# Predictions: judge accuracy above longmemeval_nodef overall; the knowledge-update type gains least,
+#   since two conflicting statements by the user at equal standing are both served as descriptions.
+dataset:
+  kind: longmemeval
+  path: data/longmemeval/longmemeval_s_cleaned.json
+models:
+  memory: openai:gpt-4o-mini
+  agent: openai:gpt-4o-mini
+  judge: openai:gpt-4o-mini
+  embed: 'local:'
+prompts:
+  extract_typed_claims: v1
+  extract_dialogue_claims: v1
+  classify_use_type: v2
+  detect_conflict: v1
+  retention_sentence: v1
+memory_system: typed
+memory:
+  max_facts: 20
+typed:
+  mode: withhold
+  hops: 0
+  detect_conflicts: true
+  endorsement: sentence
+  evidence_slots: 4
+  external_evidence: false
+locomo:
+  principal: speaker_a
+systems:
+- memory
+retrieve_k: 4
+seed: 0
+runtime:
+  workers: 8
+name: v31_longmemeval_withhold

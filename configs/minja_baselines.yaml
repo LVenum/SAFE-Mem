@@ -1,0 +1,14 @@
+# The MPBench baselines as MINJA arms (DRIFT, RandEC, LLM-sanitizer, MemLineage),
+# served by ams.eval.minja_defence. Same defence objects and prompts as
+# configs/mpbench_baselines.yaml and mpbench_drift.yaml; the backbone swaps the
+# model exactly as for the agent. RandEC loads its default weights, distilbert_suffix.pt,
+# the file MPBench names. Fixed before the run (2026-10-12).
+#
+# Predictions, fixed before the run: MemLineage = no defense (every record descends
+# from a user's turn, Trusted under Eq. 1, so the gate always allows); none of the
+# four reaches executed ASR 0, since each judges a record's content and MINJA's
+# records are the agent's own well-formed reasoning.
+name: minja_baselines
+models:
+  memory: "openai:gpt-4o-mini"
+  agent: "openai:gpt-4o-mini"

@@ -1,0 +1,38 @@
+# Spec §11, at the current scale: the scalable path must serve what the exact one serves.
+# NOT part of the final sweep; opt-in stage `scale_check`. Fixed before the run.
+# MPBench main row on per-partition HNSW; logs ANN recall@k against exact search
+dataset:
+  root: data/mpbench
+models:
+  memory: openai:gpt-4o-mini
+  agent: openai:gpt-4o-mini
+  judge: openai:gpt-4o-mini
+  embed: 'local:'
+prompts:
+  judge_entry: v2
+  judge_answer: v1
+  answer_typed: v2
+  extract_typed_claims: v1
+  classify_use_type: v2
+  detect_conflict: v1
+  retention_sentence: v1
+memory_system: typed
+memory:
+  max_facts: 6
+typed:
+  mode: withhold
+  source_cap: null
+  hops: 0
+  detect_conflicts: true
+  endorsement: sentence
+  evidence_slots: 4
+  index: hnsw
+  index_check: true
+defences:
+- no_defence
+retrieve_k: 4
+pool_size: 6240
+seed: 0
+runtime:
+  workers: 8
+name: v3_mpbench_withhold_hnsw

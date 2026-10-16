@@ -1,0 +1,1 @@
+Below are memories an assistant kept from a conversation between two people: {{a}} and {{b}}. The conversation took place over multiple days.

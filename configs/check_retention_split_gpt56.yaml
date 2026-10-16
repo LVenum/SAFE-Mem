@@ -1,0 +1,12 @@
+# Spec §10.6 step 1: how the principal's retention requests split into
+# self-contained and referential, read from user_query alone. gpt-5.6-terra,
+# Azure first with same-model OpenAI fallback; the manifest records the split.
+name: check_retention_split_gpt56
+dataset: {root: data/mpbench}
+models:
+  memory: "aiservices:gpt-5.6-terra"
+prompts:
+  retention_sentence: v1
+fallback_provider: openai
+reasoning_effort: {gpt-5.6-terra: none}
+runtime: {workers: 8}

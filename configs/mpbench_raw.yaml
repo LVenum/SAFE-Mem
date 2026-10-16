@@ -1,0 +1,15 @@
+# Raw-chunk memory arm: no extraction at write, originals go to the answering model.
+# Same models, prompts and judge as configs/mpbench.yaml so the two runs differ
+# only in the memory system. Fixed before the run; not tuned after.
+name: mpbench_raw
+dataset: {root: data/mpbench}
+memory_system: raw
+models:
+  memory: "openai:gpt-4o-mini"   # unused by raw; kept so the config shape matches
+  agent: "openai:gpt-4o-mini"
+  judge: "openai:gpt-4o-mini"
+  embed: "local:"
+prompts: {judge_entry: v2, judge_answer: v1, answer: v1}
+defences: [no_defence, a_memguard]
+retrieve_k: 4
+runtime: {workers: 8}

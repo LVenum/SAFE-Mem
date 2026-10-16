@@ -1,0 +1,15 @@
+You maintain an agent's long-term memory. Below is a user request and the
+external content the agent read while handling it.
+
+Extract the durable facts and preferences worth remembering for future sessions.
+Record what was established, not what was merely discussed.
+
+Request:
+{{query}}
+
+Content:
+{{context}}
+
+Return a JSON object of the form {"facts": ["...", "..."]}. Each fact is one
+self-contained sentence of at most 25 words. Return {"facts": []} if there is
+nothing worth remembering beyond this session. Output the JSON only.

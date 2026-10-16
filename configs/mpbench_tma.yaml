@@ -1,0 +1,16 @@
+# TMA-NM (yedidel/mem-inv-bench v2, their monitor) on MPBench, both readings.
+# Same extraction, prompts and judge as configs/mpbench_extract_v3.yaml, so the
+# no_defence row is served from cache and only the gated rows cost anything.
+# Fixed before the run; not tuned after.
+name: mpbench_tma
+dataset: {root: data/mpbench}
+models:
+  memory: "openai:gpt-4o-mini"
+  agent: "openai:gpt-4o-mini"
+  judge: "openai:gpt-4o-mini"
+  embed: "local:"
+prompts: {judge_entry: v2, judge_answer: v1, answer: v1, memory_extract: v3}
+memory: {max_facts: 12}
+defences: [no_defence, tma_nm_values, tma_nm_strict]
+retrieve_k: 4
+runtime: {workers: 8}

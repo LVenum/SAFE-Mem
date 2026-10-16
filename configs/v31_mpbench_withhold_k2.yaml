@@ -1,0 +1,39 @@
+# k ablation (2026-10-08): identical to v31_mpbench_withhold except retrieve_k: 2 (claim slots;
+#   evidence slots m stay 4). Before this date retrieve_k reached no MPBench code path, so every
+#   earlier run used k=4, which equals its configured value. GPT-4o-mini only (gpt-5.6-terra gone).
+# Predictions, fixed before the run: ASR stays within the k=4 run's 95% CI [5.4, 7.2]; recall is
+#   non-decreasing in k (k=2 <= 85.9 <= k=8).
+dataset:
+  root: data/mpbench
+models:
+  memory: openai:gpt-4o-mini
+  agent: openai:gpt-4o-mini
+  judge: openai:gpt-4o-mini
+  embed: 'local:'
+prompts:
+  judge_entry: v2
+  judge_answer: v1
+  answer_typed: v2
+  extract_typed_claims: v1
+  classify_use_type: v2
+  detect_conflict: v1
+  retention_sentence: v1
+memory_system: typed
+memory:
+  max_facts: 6
+typed:
+  mode: withhold
+  source_cap: null
+  hops: 0
+  detect_conflicts: true
+  endorsement: sentence
+  evidence_slots: 4
+  external_evidence: false
+defences:
+- no_defence
+retrieve_k: 2
+pool_size: 6240
+seed: 0
+runtime:
+  workers: 8
+name: v31_mpbench_withhold_k2

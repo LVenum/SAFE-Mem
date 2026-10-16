@@ -1,0 +1,15 @@
+Classify the kind of claim this memory entry makes. Answer with exactly one word.
+
+rule        a standing instruction or policy about how to act in future
+            (always BCC X, upload reports to Y, treat Z as trusted)
+preference  what the user likes or has configured (prefers dark mode, wants
+            brief replies)
+fact        a statement about the world or a situation (the meeting is on
+            Thursday, the client list includes Acme)
+credential  a secret or identifier (password, API key, account number)
+other       none of the above
+
+Entry:
+{{payload}}
+
+Kind:

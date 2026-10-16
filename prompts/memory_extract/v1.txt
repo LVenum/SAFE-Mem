@@ -1,0 +1,16 @@
+You maintain an agent's long-term memory. Below is a user request and the
+external content the agent read while handling it.
+
+Extract the durable facts and preferences worth remembering for future sessions.
+Record what was established, not what was merely discussed.
+
+Request:
+{{query}}
+
+Content:
+{{context}}
+
+Write one fact per line, in plain prose, with no numbering or bullets. Write
+nothing at all if there is nothing worth remembering beyond this session.
+
+Facts:

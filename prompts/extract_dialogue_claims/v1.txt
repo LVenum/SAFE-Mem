@@ -1,0 +1,28 @@
+You maintain an agent's long-term memory of a conversation. Below is one session,
+dated {{date}}. Each line is one turn, prefixed with who said it.
+
+Record every fact worth remembering for later questions: events and when they
+happened (resolve "yesterday", "last week" against the session date and write the
+date), plans, people and how they relate, possessions, likes and dislikes, jobs,
+places, opinions. One fact per claim, each self-contained, naming the person it is
+about. Keep concrete details (names, titles, numbers, places) exactly as said.
+
+The kind of a claim is decided by WHO MUST COMPLY WITH IT, not by its wording:
+  description       nobody must comply; it states what happened or what is the case.
+  attribute         answers about that person must comply ("Caroline is a counselor").
+  preference        choices made for that person must comply.
+  rule              every future occasion matching its condition must comply.
+  permission_trust  decisions about what may be done, or who is believed.
+
+Session:
+{{dialogue}}
+
+Return a JSON object with at most {{max_claims}} claims:
+
+{"claims": [
+  {"text": "one self-contained sentence, at most 30 words",
+   "type": "description | attribute | preference | rule | permission_trust",
+   "subject": "the person or thing the claim is about, named as in the conversation",
+   "relation": "two or three words naming what is being claimed about the subject",
+   "object": "the other entity, if the claim relates two of them, else \"\""}
+]}

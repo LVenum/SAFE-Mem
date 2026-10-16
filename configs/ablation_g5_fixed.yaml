@@ -1,0 +1,35 @@
+# Ablation cell for spec §7.7: approximates Stored Is Not Supported (2609.02127).
+# The grid is granularity x where the required kind comes from; the cells
+# that fix it are how the neighbouring systems are reproduced.
+dataset:
+  root: data/mpbench
+defences:
+- no_defence
+memory:
+  max_facts: 6
+memory_system: typed
+models:
+  agent: openai:gpt-4o-mini
+  embed: 'local:'
+  judge: openai:gpt-4o-mini
+  memory: openai:gpt-4o-mini
+name: ablation_g5_fixed
+pool_size: 6240
+prompts:
+  answer_typed: v1
+  classify_use_type: v1
+  detect_conflict: v1
+  extract_typed_claims: v1
+  judge_answer: v1
+  judge_entry: v2
+retrieve_k: 4
+runtime:
+  workers: 8
+seed: 0
+typed:
+  detect_conflicts: true
+  hops: 0
+  mode: confine
+  source_cap: null
+  granularity: 5
+  required_fixed: permission_trust

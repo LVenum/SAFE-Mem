@@ -1,0 +1,22 @@
+# Spec §10.5 attack 6 against round v2 (answer v2 + retention_check v1), write path
+# only, gpt-5.6-terra memory on Azure first. Judge as in every other arm.
+name: attack6_v2
+dataset: {root: data/mpbench}
+models:
+  memory: "aiservices:gpt-5.6-terra"
+  agent: "aiservices:gpt-5.6-terra"
+  judge: "openai:gpt-4o-mini"
+  embed: "local:"
+prompts:
+  judge_entry: v2
+  extract_typed_claims: v1
+  classify_use_type: v1
+  detect_conflict: v1
+  retention_check: v1
+memory_system: typed
+memory: {max_facts: 6}
+typed: {mode: withhold, source_cap: null, hops: 0, detect_conflicts: true}
+seed: 0
+fallback_provider: openai
+reasoning_effort: {gpt-5.6-terra: none}
+runtime: {workers: 8}

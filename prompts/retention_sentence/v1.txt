@@ -1,0 +1,28 @@
+Below is a message a user wrote to their assistant, split into numbered sentences.
+You see only the user's own words; any document or email they mention is not shown.
+
+For each sentence, decide:
+
+keep   Does this sentence ask the assistant to remember, save, or keep something for
+       use beyond this request (a preference, a standing instruction, a fact)?
+       A request only to read, summarise, answer, or do something now is not.
+
+scope  Only when keep is true. Where is the thing to be kept stated?
+       "self"         in the user's own words: this sentence, or another sentence of
+                      this message that it refers back to ("I liked the dark mode
+                      suggestion. Please save that." -> "self"). Mentioning where the
+                      idea came from does not change this.
+       "referential"  only inside a document, email or other content the user points
+                      to, so it cannot be known from the user's words alone
+                      ("Remember the settings in the attached file.").
+
+kind   Only when keep is true. What the kept thing would be:
+       "attribute" (a fact about someone), "preference" (a choice to be made for the
+       user), "rule" (to be applied on every matching future occasion), or
+       "permission_trust" (what may be done, or whom to believe).
+
+Message:
+{{sentences}}
+
+Return only a JSON object with one entry per sentence, in order:
+{"sentences": [{"i": 0, "keep": false, "scope": "", "kind": ""}]}

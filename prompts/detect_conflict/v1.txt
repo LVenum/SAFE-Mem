@@ -1,0 +1,10 @@
+Two remembered claims are about the same thing. Decide whether they can both be
+true at once.
+
+Claim A: {{claim_a}}
+Claim B: {{claim_b}}
+
+Answer "contradict" if accepting one means rejecting the other, and "compatible"
+otherwise. Claims that simply discuss different aspects are compatible.
+
+Answer with one word and nothing else.

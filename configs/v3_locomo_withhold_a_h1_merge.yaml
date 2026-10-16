@@ -1,0 +1,36 @@
+# Spec §11, at the current scale: the scalable path must serve what the exact one serves.
+# NOT part of the final sweep; opt-in stage `scale_check`. Fixed before the run.
+# multi-hop over entities with hub cap 4 and synonym merge at cosine 0.85 (both fixed a priori)
+dataset:
+  path: data/locomo/locomo10.json
+models:
+  memory: openai:gpt-4o-mini
+  agent: openai:gpt-4o-mini
+  judge: openai:gpt-4o-mini
+  embed: 'local:'
+prompts:
+  extract_typed_claims: v1
+  extract_dialogue_claims: v1
+  classify_use_type: v2
+  detect_conflict: v1
+  retention_sentence: v1
+memory_system: typed
+memory:
+  max_facts: 20
+typed:
+  mode: withhold
+  hops: 1
+  detect_conflicts: true
+  endorsement: sentence
+  evidence_slots: 4
+  hub_cap: 4
+  entity_merge: 0.85
+locomo:
+  principal: speaker_a
+systems:
+- memory
+retrieve_k: 4
+seed: 0
+runtime:
+  workers: 8
+name: v3_locomo_withhold_a_h1_merge

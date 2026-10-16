@@ -1,0 +1,62 @@
+[project]
+name = "ams"
+version = "0.1.0"
+description = "Controllability-based provenance for LLM agent memory consolidation"
+requires-python = ">=3.11"
+dependencies = [
+    "pyyaml>=6.0",
+    "numpy>=1.26",
+    # Backs three providers, not one: openai, azure, and vllm (which serves an
+    # OpenAI-compatible endpoint). Not optional — the server path needs it.
+    "openai>=1.40",
+    # The estimator. Small, and present on any research box already.
+    "scikit-learn>=1.4",
+    # Progress bars on every long-running sweep (ams.llm.pool.progress_bar).
+    "tqdm>=4.66",
+]
+
+[project.optional-dependencies]
+anthropic = ["anthropic>=0.34"]
+# Entra ID auth for a keyless Azure AI Services endpoint.
+azure = ["azure-identity>=1.19"]
+# Local embeddings. Needed whenever the endpoint in use has no embeddings
+# deployment, which is the common case on Azure AI Services.
+local = ["sentence-transformers>=3.0"]
+analysis = ["pandas>=2.0", "matplotlib>=3.8"]
+# LoCoMo's official QA scorer Porter-stems tokens; nltk is what it uses.
+locomo = ["nltk>=3.8"]
+# Approximate nearest-neighbour retrieval, one index per gate partition (spec §11).
+# Only needed for `typed.index: hnsw`; every reported number uses the exact path.
+ann = ["hnswlib>=0.8"]
+
+# Synced by `uv run` automatically, so the test suite and linter are always
+# present without anyone having to remember an --extra flag.
+[dependency-groups]
+dev = ["pytest>=8.0", "ruff>=0.6"]
+
+[tool.uv]
+# `uv run` re-syncs the environment to the manifest and strips anything not
+# declared here, so an extra installed by hand disappears on the next command.
+# Declaring it default-on is what makes `uv run python ...` just work.
+default-groups = ["dev"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ams"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+src = ["src", "scripts", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+[tool.ruff.lint.per-file-ignores]
+# Patch anchors are verbatim lines of vendored code and cannot be wrapped.
+"scripts/minja_patch.py" = ["E501"]

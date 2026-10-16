@@ -1,0 +1,34 @@
+# Spec §10 (v3): sentence-level endorsement, evidence layer (m=4), use-type v2, global principal.
+# Fixed before the run. Models are swapped per backbone (configs/backbones.yaml).
+# every turn the principal's: the gate has nothing to do (§10.2)
+dataset:
+  path: data/locomo/locomo10.json
+models:
+  memory: openai:gpt-4o-mini
+  agent: openai:gpt-4o-mini
+  judge: openai:gpt-4o-mini
+  embed: 'local:'
+prompts:
+  extract_typed_claims: v1
+  extract_dialogue_claims: v1
+  classify_use_type: v2
+  detect_conflict: v1
+  retention_sentence: v1
+memory_system: typed
+memory:
+  max_facts: 20
+typed:
+  mode: withhold
+  hops: 0
+  detect_conflicts: true
+  endorsement: quote     # no principal split: the whole session is the principal's turn
+  evidence_slots: 4
+locomo:
+  principal: null
+systems:
+- memory
+retrieve_k: 4
+seed: 0
+runtime:
+  workers: 8
+name: v3_locomo_gate_inert
