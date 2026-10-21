@@ -1,7 +1,7 @@
 # SAFE-Mem: Secure Agentic Memory with Fine-Grained Authority and Governance-Aware Retrieval
 
 <p align="center">
-  📄 <b>Paper</b>: arXiv <https://arxiv.org/abs/2610.22959> &nbsp;|&nbsp; ⚖️ <b>License</b>: Apache 2.0
+  📄 <b>Paper</b>: <a href="https://arxiv.org/abs/2610.22959">arXiv 2610.22959</a> &nbsp;|&nbsp; ⚖️ <b>License</b>: Apache 2.0
 </p>
 
 LLM agents build persistent memory from what their users say, from the documents and web
