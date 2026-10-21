@@ -143,9 +143,17 @@ scripts/                   # command-line entry points
 ```
 
 ## Citation
-
-Coming soon.
-
+```
+@misc{li2026safememsecureagenticmemory,
+      title={SAFE-Mem: Secure Agentic Memory with Fine-Grained Authority and Governance-Aware Retrieval}, 
+      author={Haoming Li and Dingyi Kang and Xu Hu and Jinxin Yang and Zhu Xu and Chenru Wang and Yi Ge and Miao Yin and Guanpeng Li and Feng Chen and Bingzhe Li},
+      year={2026},
+      eprint={2610.22959},
+      archivePrefix={arXiv},
+      primaryClass={cs.CR},
+      url={https://arxiv.org/abs/2610.22959}, 
+}
+```
 ## License
 
 Released under the [Apache License 2.0](LICENSE).
