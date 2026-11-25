@@ -141,6 +141,9 @@ class TypedStandingMemory:
         fixed = getattr(self.use_type, "rung", None)
         if fixed is not None:
             bits.append(f"fixedT={fixed.name.lower()}")
+        label = getattr(self.use_type, "label", None)
+        if label:
+            bits.append(label)
         if self.retention_version and self.endorsement == "quote":
             bits.append(f"retain={self.retention_version}")
         if self.endorsement == "sentence":

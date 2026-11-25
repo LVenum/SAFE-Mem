@@ -41,6 +41,13 @@ def build_memory(cfg: Config, ctx: RunContext) -> MemorySystem:
                 version=cfg.get("prompts.classify_use_type", "v1"),
             )
         )
+        noise = cfg.get("typed.use_noise")
+        if noise:
+            from ams.eval.use_type import NoisyUse
+
+            use_type = NoisyUse(
+                base=use_type, p=noise["p"], shift=noise["shift"], seed=noise.get("seed", 0)
+            )
         memory = TypedStandingMemory(
             client=ctx.client(m["memory"], stage="memory_write"),
             model=model_of(m["memory"]),

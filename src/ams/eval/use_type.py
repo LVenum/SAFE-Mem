@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 from dataclasses import dataclass, field
 
 from ams.core.lattice import Rung
@@ -81,3 +82,38 @@ class FixedUse:
     @staticmethod
     def inherit(turn_required: Rung) -> Rung:
         return turn_required
+
+
+def _unit(seed: int, query: str) -> float:
+    """A fixed draw in [0, 1) per (seed, query)."""
+    h = hashlib.sha256(f"{seed}\x00{query.strip()}".encode()).digest()
+    return int.from_bytes(h[:8], "big") / 2**64
+
+
+@dataclass
+class NoisyUse:
+    """Rebuttal E1: shift the classifier's rung by `shift` levels on a fraction `p` of
+    queries, clamped to the lattice. The perturbed set is chosen by a hash of
+    (seed, query), so a smaller p perturbs a subset of what a larger p does."""
+
+    base: object
+    p: float
+    shift: int
+    seed: int = 0
+    shifted: set[str] = field(default_factory=set, repr=False)
+
+    @property
+    def label(self) -> str:
+        return f"noise={self.shift:+d}@{self.p:g}"
+
+    def required(self, query: str) -> Rung:
+        r = self.base.required(query)
+        if _unit(self.seed, query) >= self.p:
+            return r
+        new = Rung(min(max(int(r) + self.shift, Rung.DESCRIPTION), Rung.PERMISSION_TRUST))
+        if new != r:
+            self.shifted.add((query or "").strip())
+        return new
+
+    def subject(self, query: str) -> str:
+        return getattr(self.base, "subject", lambda q: "")(query)
