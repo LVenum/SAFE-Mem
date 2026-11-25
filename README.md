@@ -34,8 +34,8 @@ promoted to something the user asked for.
 Python 3.11, managed with [uv](https://github.com/astral-sh/uv):
 
 ```bash
-git clone https://github.com/LVenum/Agentic-Memory-Security.git
-cd Agentic-Memory-Security
+git clone https://github.com/LVenum/SAFE-Mem.git
+cd SAFE-Mem
 uv venv --python 3.11 && source .venv/bin/activate
 uv pip install -e '.[local,locomo]'
 bash scripts/fetch_third_party.sh   # baselines and MINJA, at pinned commits
