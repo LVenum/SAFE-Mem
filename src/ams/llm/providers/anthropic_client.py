@@ -42,9 +42,9 @@ class AnthropicClient:
             "model": request.model,
             "messages": turns,
             "max_tokens": request.max_tokens,
-            # SDK 1.x+ dropped `temperature` from the signature; the API still honours it on
-            # the models we call (Haiku 4.5), and the judge depends on temperature 0.
-            "extra_body": {"temperature": request.temperature},
+            # No sampling parameters: SDK 1.x+ removed `temperature` from the signature and the
+            # API rejects it for current models ("temperature: Extra inputs are not permitted",
+            # claude-haiku-4-5, 2026-11-26). Reruns stay identical through the response cache.
         }
         if system:
             kwargs["system"] = system
