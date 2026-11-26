@@ -19,6 +19,7 @@ PRICES: dict[str, Price] = {
     "openai:gpt-5": Price(1.25, 10.00),
     "openai:gpt-5.6-terra": Price(2.00, 12.00),
     "anthropic:claude-haiku-4-5-20251001": Price(1.00, 5.00),
+    "anthropic:claude-haiku-4-5": Price(1.00, 5.00),
     "anthropic:claude-sonnet-5": Price(3.00, 15.00),
     "anthropic:claude-opus-5": Price(5.00, 25.00),
     "azure:gpt-4o-mini": Price(0.15, 0.60),

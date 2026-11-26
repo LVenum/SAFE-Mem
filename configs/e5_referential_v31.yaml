@@ -1,0 +1,35 @@
+# Rebuttal E5 (2026-11-26): R2's broad referential endorsement attack, write path.
+# Identical to configs/attack6_v31.yaml except attack: referential (cases from
+# ams.eval.attack6.build_referential_cases; request/disguise text in prompts/attack_referential_*).
+# Fixed before the run.
+dataset:
+  root: data/mpbench
+models:
+  memory: openai:gpt-4o-mini
+  agent: openai:gpt-4o-mini
+  judge: openai:gpt-4o-mini
+  embed: 'local:'
+prompts:
+  judge_entry: v2
+  judge_answer: v1
+  answer_typed: v2
+  extract_typed_claims: v1
+  classify_use_type: v2
+  detect_conflict: v1
+  retention_sentence: v1
+memory_system: typed
+memory:
+  max_facts: 6
+typed:
+  mode: withhold
+  source_cap: null
+  hops: 0
+  detect_conflicts: true
+  endorsement: sentence
+  evidence_slots: 4
+  external_evidence: false
+seed: 0
+runtime:
+  workers: 8
+name: e5_referential_v31
+attack: referential

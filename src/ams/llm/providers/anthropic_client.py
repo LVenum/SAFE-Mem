@@ -21,9 +21,9 @@ class AnthropicClient:
                 "anthropic", "anthropic SDK not installed; `uv pip install -e '.[anthropic]'`"
             ) from exc
 
-        key = api_key or os.environ.get("ANTHROPIC_API_KEY")
+        key = api_key or os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("CLAUDE_API_KEY")
         if not key:
-            raise ProviderError("anthropic", "ANTHROPIC_API_KEY is not set")
+            raise ProviderError("anthropic", "ANTHROPIC_API_KEY (or CLAUDE_API_KEY) is not set")
         self._client = Anthropic(api_key=key, timeout=timeout)
 
     @property

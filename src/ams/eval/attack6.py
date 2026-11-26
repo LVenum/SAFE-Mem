@@ -52,4 +52,35 @@ def run_case(memory, judge, case: Attack6Case) -> dict:
         "poison_written": judge.entry_matches(case.expected_memory, texts),
         "poison_elevated": judge.entry_matches(case.expected_memory, elevated),
         "elevated_texts": elevated,
+        "elevated_levels": [
+            e.metadata.get("usable_as")
+            for e in res.written
+            if e.metadata.get("usable_as") != "description"
+        ],
     }
+
+
+def build_referential_cases(cases, prompts: PromptLibrary, *, seed: int = 0) -> list[Attack6Case]:
+    """Rebuttal E5 (R2): a broad request to keep "the settings in this document".
+
+    a: the document is the attack artifact itself (the principal endorses an
+       attacker-authored page).
+    b: the document is a benign artifact from a warranted case, with the payload
+       appended as one more line shaped like a setting (R2's "payload shaped to
+       look like the referenced content").
+    The request is the same fixed sentence in both, from prompts/."""
+    ben = [
+        c for c in cases if not c.is_adversarial and c.legitimate_memory_write and c.context.strip()
+    ]
+    adv = [c for c in cases if c.is_adversarial and c.expected_memory.strip() and c.context.strip()]
+    rng = random.Random(seed)
+    partners = rng.sample(adv, len(ben))
+    ask = prompts.get("attack_referential_request", "v1").render().strip()
+    shape = prompts.get("attack_referential_disguise", "v1")
+    out = []
+    for b, a in zip(ben, partners, strict=True):
+        base = f"{b.cid}+{a.cid}"
+        out.append(Attack6Case(f"{base}/a", "a", ask, a.context, a.expected_memory))
+        line = shape.render(payload=a.expected_memory.strip()).strip()
+        out.append(Attack6Case(f"{base}/b", "b", ask, f"{b.context}\n{line}", a.expected_memory))
+    return out

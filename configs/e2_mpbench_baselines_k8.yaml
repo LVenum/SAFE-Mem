@@ -1,0 +1,31 @@
+# Rebuttal E2 equal budget (2026-11-26). Identical to configs/mpbench_baselines.yaml except retrieve_k: 8.
+# Fixed before the run.
+name: e2_mpbench_baselines_k8
+dataset:
+  root: data/mpbench
+models:
+  memory: openai:gpt-4o-mini
+  agent: openai:gpt-4o-mini
+  judge: openai:gpt-4o-mini
+  embed: 'local:'
+prompts:
+  judge_entry: v2
+  judge_answer: v1
+  answer: v1
+  memory_extract: v1
+memory:
+  max_facts: 6
+defences:
+- llm_sanitiser
+- memlineage_coarse
+- memlineage_lm
+- integrity_gate
+- integrity_gate_all
+- randec_distil
+randec:
+  weights: third_party/AMemGuard/certified-llm-safety/models/distilbert_suffix.pt
+retrieve_k: 8
+pool_size: 6240
+seed: 0
+runtime:
+  workers: 8

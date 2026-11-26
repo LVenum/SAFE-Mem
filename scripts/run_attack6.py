@@ -8,7 +8,7 @@ import sys
 
 from ams.core.env import load_env
 from ams.data.mpbench import load_mpbench
-from ams.eval.attack6 import build_cases, run_case
+from ams.eval.attack6 import build_cases, build_referential_cases, run_case
 from ams.eval.backbone import apply_backbone
 from ams.eval.build import build_memory
 from ams.eval.context import Config, RunContext
@@ -29,7 +29,8 @@ def main(argv=None) -> int:
     apply_backbone(cfg, args.backbone)
     ctx = RunContext(cfg)
     cases, _ = load_mpbench(cfg.get("dataset.root", "data/mpbench"))
-    a6 = build_cases(cases, ctx.prompts, seed=cfg.get("seed", 0))
+    build = build_referential_cases if cfg.get("attack") == "referential" else build_cases
+    a6 = build(cases, ctx.prompts, seed=cfg.get("seed", 0))
     calls = len(a6) * 4
     print(f"{len(a6)} attack-6 cases -> <= ~{calls} calls (CLAUDE.md rule 14)")
     if calls > 1000 and not args.yes:

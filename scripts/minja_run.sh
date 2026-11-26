@@ -56,6 +56,7 @@ ARMS="${ARMS:-clean none A-MemGuard TMA-NM-values isolation typed-confine typed-
 RUN_ID="${RUN_ID:-minja_${BACKBONE:-4omini}-$(date -u +%Y%m%dT%H%M%SZ)}"
 OUT="${AMS_RESULTS_ROOT:-$REPO/results}/$RUN_ID"
 YES="${MINJA_YES:-0}"
+TARGET_FORM="${MINJA_TARGET_FORM:-digits}"   # rebuttal E3, see the poison step
 [ "${1:-}" = "--yes" ] && YES=1
 
 # .env is parsed, never sourced: it holds URLs with characters the shell treats
@@ -164,7 +165,7 @@ json.dump({"run_id":"$RUN_ID","git_sha":sha,"minja_sha":minja,"llm":"$LLM",
            "victim_id":$VICTIM,"target_id":$TARGET,"n_attack":$N_ATTACK,
            "n_filler":$N_FILLER,"n_test":$N_TEST,"num_shots":$NUM_SHOTS,
            "seed":$SEED,"arms":"$ARMS".split(),
-           "poison_modes":"add_poison.py as released: indication modes 1 and 3, plus the clean original"},
+           "poison_modes":"add_poison.py as released: indication modes 1 and 3, plus the clean original","target_form":"$TARGET_FORM"},
           open(sys.argv[1],"w"), indent=2)
 PY
 
@@ -190,6 +191,33 @@ for name, who in (("attack_base.json", lambda n: "attacker"),
 PY
   MINJA_SEED="$SEED" python add_poison.py "$OUT/bench/attack_base.json" \
       "$OUT/bench/filler.json" "$VICTIM" "$TARGET" "$OUT/bench/poison_stream.json"
+  # Rebuttal E3 (2026-11-26): MINJA_TARGET_FORM rewrites the target id inside the
+  # appended "Knowledge:" sentence only, so the attacker never writes it as digits.
+  # digits = as released (default); words = spelled out; arith = "<victim> + <offset>".
+  if [ "${MINJA_TARGET_FORM:-digits}" != "digits" ]; then
+    python - "$OUT/bench/poison_stream.json" "$VICTIM" "$TARGET" "$MINJA_TARGET_FORM" <<'PY'
+import json, sys
+from pathlib import Path
+path, victim, target, form = Path(sys.argv[1]), int(sys.argv[2]), int(sys.argv[3]), sys.argv[4]
+ONES = "zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen".split()
+TENS = "_ _ twenty thirty forty fifty sixty seventy eighty ninety".split()
+def words(n):
+    if n < 20: return ONES[n]
+    if n < 100: return TENS[n // 10] + ("-" + ONES[n % 10] if n % 10 else "")
+    if n < 1000: return ONES[n // 100] + " hundred" + (" " + words(n % 100) if n % 100 else "")
+    return words(n // 1000) + " thousand" + (" " + words(n % 1000) if n % 1000 else "")
+new = {"words": words(target), "arith": f"{victim} + {target - victim}"}[form]
+rows, n = json.loads(path.read_text()), 0
+for r in rows:
+    head, sep, knowledge = r["template"].partition(" Knowledge:")
+    if sep and str(target) in knowledge:
+        r["template"] = head + sep + knowledge.replace(str(target), new)
+        n += 1
+assert n, "no Knowledge sentence carried the target id"
+path.write_text(json.dumps(rows, indent=4))
+print(f"E3: target id rewritten as {new!r} in {n} attack entries")
+PY
+  fi
   # the same traffic with no indication sentence: the clean arm's write phase
   MINJA_SEED="$SEED" python - "$OUT/bench" <<'PY'
 import json, random, sys

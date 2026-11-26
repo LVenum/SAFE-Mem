@@ -1,0 +1,32 @@
+# Rebuttal E2 equal budget (2026-11-26). Identical to configs/locomo_baselines.yaml except retrieve_k: 8, systems: ['memory'].
+# Fixed before the run.
+name: e2_locomo_baselines_k8
+dataset:
+  path: data/locomo/locomo10.json
+models:
+  memory: openai:gpt-4o-mini
+  agent: openai:gpt-4o-mini
+  judge: openai:gpt-4o-mini
+  embed: 'local:'
+prompts:
+  memory_extract: v1
+memory_system: simple
+memory:
+  max_facts: 20
+defences:
+- no_defence
+- a_memguard
+- llm_sanitiser
+- randec_distil
+- memlineage_coarse
+- memlineage_lm
+- integrity_gate
+- integrity_gate_all
+randec:
+  weights: third_party/AMemGuard/certified-llm-safety/models/distilbert_suffix.pt
+systems:
+- memory
+retrieve_k: 8
+seed: 0
+runtime:
+  workers: 8
