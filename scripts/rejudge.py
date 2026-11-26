@@ -27,13 +27,17 @@ def main(argv=None) -> int:
     ap.add_argument("--workers", type=int, default=16)
     ap.add_argument("--name", default="e6_rejudge")
     ap.add_argument("--yes", action="store_true", help="confirm a run above ~1k calls")
+    ap.add_argument("--skip", default="", help="comma-separated defence names not to re-judge")
     a = ap.parse_args(argv)
     load_env()
     csv.field_size_limit(10**9)
-    n = 0
-    for p in a.outcomes:
+    skip = {x.strip() for x in a.skip.split(",") if x.strip()}
+
+    def read(p):
         with p.open(newline="") as f:
-            n += sum(1 for _ in csv.DictReader(f))
+            return [r for r in csv.DictReader(f) if r["defence"] not in skip]
+
+    n = sum(len(read(p)) for p in a.outcomes)
     print(f"projected <= ~{n} judge calls before cache hits (CLAUDE.md rule 14)")
     if n > 1000 and not a.yes:
         raise SystemExit("pass --yes to run")
@@ -58,8 +62,7 @@ def main(argv=None) -> int:
 
     allv, report = [], {}
     for p in a.outcomes:
-        with p.open(newline="") as f:
-            rows = list(csv.DictReader(f))
+        rows = read(p)
         v = rejudge(rows, cases, judge, workers=a.workers)
         for x in v:
             x["source"] = str(p)

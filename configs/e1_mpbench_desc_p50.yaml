@@ -1,0 +1,43 @@
+# Rebuttal E1b (2026-11-26): on a fraction p of queries the use is set to description
+# (shift -4, clamped), i.e. the description-boundary error R2 asks about, swept between
+# the base run (p = 0) and e1_mpbench_alldesc (p = 1). Same hash as E1, so the moved set
+# is nested. Identical to v31_mpbench_withhold except typed.use_noise: {p: 0.5, shift: -4, seed: 0}.
+# Added after E1 showed one-level-down rarely crosses that boundary. Fixed before the run.
+dataset:
+  root: data/mpbench
+models:
+  memory: openai:gpt-4o-mini
+  agent: openai:gpt-4o-mini
+  judge: openai:gpt-4o-mini
+  embed: 'local:'
+prompts:
+  judge_entry: v2
+  judge_answer: v1
+  answer_typed: v2
+  extract_typed_claims: v1
+  classify_use_type: v2
+  detect_conflict: v1
+  retention_sentence: v1
+memory_system: typed
+memory:
+  max_facts: 6
+typed:
+  mode: withhold
+  source_cap: null
+  hops: 0
+  detect_conflicts: true
+  endorsement: sentence
+  evidence_slots: 4
+  external_evidence: false
+  use_noise:
+    p: 0.5
+    shift: -4
+    seed: 0
+defences:
+- no_defence
+retrieve_k: 4
+pool_size: 6240
+seed: 0
+runtime:
+  workers: 8
+name: e1_mpbench_desc_p50

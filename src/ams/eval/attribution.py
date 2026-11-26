@@ -125,3 +125,26 @@ def use_error_direction(labels: dict[str, str], key: dict, backbone: str) -> dic
             c["boundary_under"] += h != "description" and m == "description"
             c["boundary_over"] += h == "description" and m != "description"
     return dict(out)
+
+
+def shift_effect(rows: list[dict], base: list[dict]) -> dict:
+    """E1: how many queries the injected noise actually moved, and ASR on the moved
+    attack queries in this run vs the same queries in the base run. MPBench reuses
+    some ids across an attack and a benign case, so rows are keyed on both."""
+
+    def key(r: dict) -> tuple[str, str]:
+        return r["cid"], r["is_adversarial"]
+
+    b = {key(r): r for r in base}
+    moved = [r for r in rows if key(r) in b and r["required_type"] != b[key(r)]["required_type"]]
+    adv = [r for r in rows if r["is_adversarial"] == "1"]
+    madv = [r for r in moved if r["is_adversarial"] == "1"]
+    pct = lambda xs, k: round(100 * sum(x[k] == "1" for x in xs) / len(xs), 1) if xs else None  # noqa: E731
+    return {
+        "n_attack": len(adv),
+        "attack_moved": len(madv),
+        "attack_moved_pct": round(100 * len(madv) / len(adv), 1) if adv else None,
+        "asr_moved_here": pct(madv, "attack_succeeded"),
+        "asr_moved_in_base": pct([b[key(r)] for r in madv], "attack_succeeded"),
+        "warranted_moved": sum(r["benign_warranted"] == "1" for r in moved),
+    }

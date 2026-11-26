@@ -5,6 +5,7 @@
 #   bash scripts/run_rebuttal.sh <job>
 #
 #   e1        E1 rest: use-error injection, MPBench up_p100 + LoCoMo up (4 runs)
+#   e1b       E1b: use set to description on p = 10/25/50% of MPBench queries (3 runs)
 #   e2mp      E2 MPBench baselines with 8 retrieved entries (3 configs)
 #   e2lc      E2 LoCoMo baselines with 8 retrieved entries (2 configs)
 #   e2b       E2b LoCoMo with SAFE-Mem's graph and passages, governance off (A and B)
@@ -23,6 +24,7 @@ latest() { find "$R" -path "*$1*/mpbench_outcomes.csv" 2>/dev/null | sort | tail
 case "${1:-}" in
   e1)   mp e1_mpbench_up_p100
         for p in 10 25 50 100; do lc "e1_locomo_up_p${p}_a"; done ;;
+  e1b)  for p in 10 25 50; do mp "e1_mpbench_desc_p${p}"; done ;;
   e2mp) for c in e2_mpbench_k8 e2_mpbench_baselines_k8 e2_mpbench_drift_k8; do mp "$c"; done ;;
   e2lc) for c in e2_locomo_baselines_k8 e2_locomo_drift_k8; do lc "$c"; done ;;
   e2b)  lc e2b_locomo_govoff_a; lc e2b_locomo_govoff_b ;;
@@ -38,6 +40,10 @@ case "${1:-}" in
           f=$(latest "$pat"); if [ -n "$f" ]; then files+=("$f"); else echo "missing: $pat" >&2; fi
         done
         printf 'rejudging:\n'; printf '  %s\n' "${files[@]}"
-        $PY scripts/rejudge.py --judge anthropic:claude-haiku-4-5 --outcomes "${files[@]}" --yes ;;
-  *)    sed -n 2,17p "$0"; exit 1 ;;
+        # skipped: integrity_gate[sensitive] (== MemLineage coarse by construction) and the
+        # MemLineage configuration the paper does not report. integrity_gate[all] is kept: its
+        # numbers are Table 1's TMA-NM row.
+        $PY scripts/rejudge.py --judge anthropic:claude-haiku-4-5 --outcomes "${files[@]}" --yes \
+          --skip "integrity_gate[sensitive],memlineage[lm_self_eval,tau=0.3]" ;;
+  *)    sed -n 2,18p "$0"; exit 1 ;;
 esac
